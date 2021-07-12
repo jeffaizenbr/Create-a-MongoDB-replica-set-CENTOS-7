@@ -24,7 +24,7 @@ gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc
 ```
 
 ```bash
-sudo yum install mongodb-org
+sudo yum install mongodb-org -y
 ```
 
 ```bash
