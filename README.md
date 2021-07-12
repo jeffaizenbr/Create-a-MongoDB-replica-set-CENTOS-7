@@ -12,6 +12,25 @@ vim /etc/hosts
 192.168.122.32 kakaroto0003 kakaroto0003.sou.jeff
 ```
 
+Configure MongoDB Repository
+
+```bash
+[mongodb-org-4.0]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/$releasever/mongodb-org/4.0/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-4.0.asc
+```
+
+```bash
+sudo yum install mongodb-org
+```
+
+```bash
+sudo systemctl start mongod ; sudo systemctl enable mongod
+```
+
 # 2 - Edit mongod.conf
 
 ```bash
