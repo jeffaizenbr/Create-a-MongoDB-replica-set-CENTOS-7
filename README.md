@@ -40,6 +40,13 @@ vim /etc/mongod.conf
 ```bash
 replication:
   replSetName: "rs0"
+  
+  
+  
+  wiredTiger:
+    engineConfig:
+     cacheSizeGB: 12
+
 ```
 
 ```bash
