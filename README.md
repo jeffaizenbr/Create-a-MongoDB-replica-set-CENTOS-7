@@ -118,7 +118,7 @@ rs.stepDown(120)
 On primary node 
 
 ```bash
-rs.add("kakaroto0002.sou.jeff")
+rs.add("kakaroto0004.sou.jeff")
 ```
 
 ```bash
