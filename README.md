@@ -107,4 +107,26 @@ show dbs
 ```bash
 db.newdatabase.find()
 ```
+Important, 
+to elect a primary node to secondary, type the command below 
+```bash
+rs.stepDown(120)
+```
+
+# 8 - Adding e new node on replication set MongoDB
+
+On primary node 
+
+```bash
+rs.add("kakaroto0002.sou.jeff")
+```
+
+```bash
+vim /etc/mongorc.js
+```
+```bash
+db.getMongo().setSecondaryOk()
+```
+
+
 
