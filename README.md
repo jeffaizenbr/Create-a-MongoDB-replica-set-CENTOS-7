@@ -12,7 +12,7 @@ vim /etc/hosts
 192.168.122.32 kakaroto0003 kakaroto0003.sou.jeff
 ```
 
-Configure MongoDB Repository
+Configure MongoDB Repository 4.0
 
 ```bash
 [mongodb-org-4.0]
@@ -112,7 +112,10 @@ to elect a primary node to secondary, type the command below
 ```bash
 rs.stepDown(120)
 ```
-
+To view the status of syncronization nodes
+```bash
+rs.printSecondaryReplicationInfo()
+```
 # 8 - Adding e new node on replication set MongoDB
 
 On primary node 
@@ -126,6 +129,49 @@ vim /etc/mongorc.js
 ```
 ```bash
 db.getMongo().setSecondaryOk()
+```
+
+# 9 - Backup MongoDB
+
+A) Creating parition the mirror MongoDB volume
+```bash
+lvcreate --size 500M --snapshot --name snapshot /dev/centos/data
+```
+B)Mounting partition
+```bash
+mkdir -p /.snapshot
+```
+```bash
+vim /etc/fstab
+```
+```bash
+/dev/centos/snapshot   /.snapshot auto  defaults 0 0
+```
+At this point the volume ".snapshot" will mirror MongoDB partition
+
+C) Making a GZIP file from entire "./snapshot" partition
+```bash
+umount -l /dev/centos/snapshot
+```
+```bash
+dd if=/dev/centos/snapshot | gzip > /home/bkp/snapshot20210714.gz
+```
+D) Restauring the backup “snapshot20210714.gz”
+
+Creating the partition to deploy the backup
+```bash
+lvcreate --size 650M --name mongorestore centos
+```
+Initiate restore
+```bash
+gzip -d -c /home/bkp/snapshot20210714.gz | dd of=/dev/centos/mongorestore
+```
+Mouting new parition on the same MongoDB volume
+```bash
+vim /etc/fstab
+```
+```bash
+/dev/centos/mongorestore   /data/mongodb xfs  defaults 0 0 
 ```
 
 
