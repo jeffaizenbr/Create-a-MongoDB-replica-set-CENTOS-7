@@ -135,7 +135,7 @@ db.getMongo().setSecondaryOk()
 
 A) Creating parition the mirror MongoDB volume
 ```bash
-lvcreate --size 500M --snapshot --name snapshot /dev/centos/data
+lvcreate --size 500M --snapshot --name mongo-snap /dev/centos/data
 ```
 B) Mounting partition
 ```bash
@@ -145,7 +145,7 @@ mkdir -p /.snapshot
 vim /etc/fstab
 ```
 ```bash
-/dev/centos/snapshot   /.snapshot auto  defaults 0 0
+/dev/centos/mongo-snap   /.snapshot auto  defaults 0 0
 ```
 At this point the volume ".snapshot" will mirror MongoDB partition
 
