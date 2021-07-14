@@ -137,7 +137,7 @@ A) Creating parition the mirror MongoDB volume
 ```bash
 lvcreate --size 500M --snapshot --name snapshot /dev/centos/data
 ```
-B)Mounting partition
+B) Mounting partition
 ```bash
 mkdir -p /.snapshot
 ```
