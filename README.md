@@ -154,7 +154,7 @@ C) Making a GZIP file from entire "./snapshot" partition
 umount -l /dev/centos/mongo-snap
 ```
 ```bash
-dd if=/dev/centos/snapshot | gzip > /home/bkp/snapshot20210714.gz
+dd if=/dev/centos/mongo-snap | gzip > /home/bkp/snapshot20210714.gz
 ```
 D) Restauring the backup “snapshot20210714.gz”
 
