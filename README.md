@@ -120,7 +120,7 @@ On primary node
 ```bash
 rs.add("kakaroto0004.sou.jeff")
 ```
-
+On secondary host
 ```bash
 vim /etc/mongorc.js
 ```
