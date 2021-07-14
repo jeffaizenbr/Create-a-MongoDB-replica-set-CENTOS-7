@@ -151,7 +151,7 @@ At this point the volume ".snapshot" will mirror MongoDB partition
 
 C) Making a GZIP file from entire "./snapshot" partition
 ```bash
-umount -l /dev/centos/snapshot
+umount -l /dev/centos/mongo-snap
 ```
 ```bash
 dd if=/dev/centos/snapshot | gzip > /home/bkp/snapshot20210714.gz
