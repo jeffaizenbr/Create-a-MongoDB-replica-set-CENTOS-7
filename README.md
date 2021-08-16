@@ -176,3 +176,50 @@ vim /etc/fstab
 
 
 
+# 10 - Adding new cluster hidden mode (priority 0)
+
+A) Access primary MongoDB cluster, and put de command below 
+
+```bash
+rs.add({ host: "kakaroto0005:27017", priority: 0, votes: 0, hidden: true })
+```
+Obs: If you want do remove a cluster member, type the command below : 
+```bash
+rs.remove("kakaroto0005:27017")
+```
+
+B) Test the replication process
+```bash
+rs.printSlaveReplicationInfo()
+```
+
+```bash
+rs.status()
+```
+
+C) Convert the cluster member from hidden to secondary
+
+```bash
+cfg = rs.conf();
+```
+
+```bash
+cfg.members[4].priority = 0.5
+```
+
+```bash
+cfg.members[3].votes = 1
+```
+
+```bash
+cfg.members[3].hidden = false
+```
+
+```bash
+print(cfg)/printjson(cfg)
+```
+
+```bash
+rs.reconfig(cfg)
+```
+
