@@ -216,7 +216,7 @@ cfg.members[3].hidden = false
 ```
 
 ```bash
-print(cfg)/printjson(cfg)
+print(cfg)  OR  printjson(cfg)
 ```
 
 ```bash
