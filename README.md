@@ -71,16 +71,7 @@ press ENTER to become "PRIMARY" on mongo console
 rs0:PRIMARY>
 ```
 
-# 5 - Adding secondary members
-
-```bash
-rs.add("kakaroto0002.sou.jeff")
-```
-```bash
-rs.add("kakaroto0003.sou.jeff")
-```
-
-# 6 - Start slave service on mongo console (access slaves Mongo Servers)
+# 5 - Start slave service on mongo console (access slaves Mongo Servers)
 
 ```bash
 vim /etc/mongorc.js
@@ -89,7 +80,7 @@ vim /etc/mongorc.js
 db.getMongo().setSecondaryOk()
 ```
 
-# 7 - Create a database to test replication
+# 6 - Create a database to test replication
 
 ```bash
 use newdatabase
@@ -116,7 +107,7 @@ To view the status of syncronization nodes
 ```bash
 rs.printSecondaryReplicationInfo()
 ```
-# 8 - Adding e new node on replication set MongoDB
+# 7 - Adding e new node on replication set MongoDB
 
 On primary node 
 
@@ -131,7 +122,7 @@ vim /etc/mongorc.js
 db.getMongo().setSecondaryOk()
 ```
 
-# 9 - Backup MongoDB
+# 8 - Backup MongoDB
 
 A) Creating parition the mirror MongoDB volume
 ```bash
@@ -176,7 +167,7 @@ vim /etc/fstab
 
 
 
-# 10 - Adding new cluster hidden mode (priority 0)
+# 9 - Adding new cluster hidden mode (priority 0)
 
 A) Access primary MongoDB cluster, and put de command below 
 
@@ -222,4 +213,42 @@ print(cfg)  OR  printjson(cfg)
 ```bash
 rs.reconfig(cfg)
 ```
+
+# 10 - setting password on mongoDB cluster
+
+Enter de admin database
+```bash
+use admin
+```
+
+create a user "admin" with the password "123mudar"
+```bash
+db.createUser(
+ {
+ user: "admin",
+ pwd: "123mudar",
+ roles: [ "userAdminAnyDatabase",
+          "dbAdminAnyDatabase",
+          "readWriteAnyDatabase"]
+ }
+)
+```
+
+put the line below on /etc/mongod.conf
+```bash
+security:
+   authorization: enabled
+```
+
+restart de mongod
+```bash
+systemctl restart mongod
+```
+teste de authentication
+```bash
+mongo admin -u admin -p 123mudar
+```
+
+
+
 
