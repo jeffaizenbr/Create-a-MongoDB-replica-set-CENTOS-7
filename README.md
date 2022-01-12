@@ -216,34 +216,45 @@ rs.reconfig(cfg)
 
 # 10 - setting password on mongoDB cluster
 
-Enter de admin database
-se information without enter mongo shell 
+create key pass on master
+
 ```bash
-mongo --eval 'rs.status()'
+openssl rand -base64 768 > /var/lib/mongo/mongo-security/keyfile.txt
+```
+
+```bash
+chmod 400 keyfile.txt ; chown mongod:mongod /keyfile.txt
+```
+Copy file do slave servers
+```bash
+scp keyfile.txt root@camus0002:/var/lib/mongo/mongo-security
 ```
 
 
+Create user on admin database
 ```bash
 use admin
 ```
 
-create a user "admin" with the password "123mudar"
+
 ```bash
+
 db.createUser(
- {
- user: "admin",
- pwd: "123mudar",
- roles: [ "userAdminAnyDatabase",
-          "dbAdminAnyDatabase",
-          "readWriteAnyDatabase"]
- }
-)
+   {
+       user: "tom", 
+       pwd: "jerry", 
+       roles:["root"]
+   })
+
 ```
 
 put the line below on /etc/mongod.conf
+
+
 ```bash
 security:
    authorization: enabled
+   keyFile: /var/lib/mongo/mongo-security/keyfile.txt
 ```
 
 restart de mongod
@@ -252,7 +263,7 @@ systemctl restart mongod
 ```
 teste de authentication
 ```bash
-mongo admin -u admin -p 123mudar
+mongo --port 27017 -u "USER" -p "SENHA" --authenticationDatabase "admin"
 ```
 
 
