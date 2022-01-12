@@ -217,6 +217,12 @@ rs.reconfig(cfg)
 # 10 - setting password on mongoDB cluster
 
 Enter de admin database
+se information without enter mongo shell 
+```bash
+mongo --eval 'rs.status()'
+```
+
+
 ```bash
 use admin
 ```
