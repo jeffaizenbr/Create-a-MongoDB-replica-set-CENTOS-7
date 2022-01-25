@@ -230,6 +230,28 @@ db.createUser(
    })
 
 ```
+OR
+```bash
+db.createUser(
+ {
+ user: "admin",
+ pwd: "senha",
+ roles: [ "userAdminAnyDatabase",
+          "dbAdminAnyDatabase",
+          "readWriteAnyDatabase"]
+ }
+)
+```
+You can add a role to a user that already exist on database
+
+"use DATABASE"
+```bash
+db.grantRolesToUser('user1', ['readWriteAnyDatabase']);
+OR
+db.grantRolesToUser('user1', [{ role: 'readWrite', db: 'account' }]);
+```
+
+
 
 put the line below on /etc/mongod.conf
 
