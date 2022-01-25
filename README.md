@@ -107,68 +107,7 @@ To view the status of syncronization nodes
 ```bash
 rs.printSecondaryReplicationInfo()
 ```
-# 7 - Adding e new node on replication set MongoDB
-
-On primary node 
-
-```bash
-rs.add("kakaroto0004.sou.jeff")
-```
-On secondary host
-```bash
-vim /etc/mongorc.js
-```
-```bash
-db.getMongo().setSecondaryOk()
-```
-
-# 8 - Backup MongoDB
-
-A) Creating parition the mirror MongoDB volume
-```bash
-lvcreate --size 500M --snapshot --name mongo-snap /dev/centos/data
-```
-B) Mounting partition
-```bash
-mkdir -p /.snapshot
-```
-```bash
-vim /etc/fstab
-```
-```bash
-/dev/centos/mongo-snap   /.snapshot auto  defaults 0 0
-```
-At this point the volume ".snapshot" will mirror MongoDB partition
-
-C) Making a GZIP file from entire "./snapshot" partition
-```bash
-umount -l /dev/centos/mongo-snap
-```
-```bash
-dd if=/dev/centos/mongo-snap | gzip > /home/bkp/snapshot20210714.gz
-```
-D) Restauring the backup “snapshot20210714.gz”
-
-Creating the partition to deploy the backup
-```bash
-lvcreate --size 650M --name mongorestore centos
-```
-Initiate restore
-```bash
-gzip -d -c /home/bkp/snapshot20210714.gz | dd of=/dev/centos/mongorestore
-```
-Mouting new parition on the same MongoDB volume
-```bash
-vim /etc/fstab
-```
-```bash
-/dev/centos/mongorestore   /data/mongodb xfs  defaults 0 0 
-```
-
-
-
-# 9 - Adding new cluster hidden mode (priority 0)
-
+# 7 - Adding new cluster hidden mode (priority 0)
 A) Access primary MongoDB cluster, and put de command below 
 
 ```bash
@@ -213,6 +152,50 @@ print(cfg)  OR  printjson(cfg)
 ```bash
 rs.reconfig(cfg)
 ```
+
+
+# 8 - Backup MongoDB
+
+A) Creating parition the mirror MongoDB volume
+```bash
+lvcreate --size 500M --snapshot --name mongo-snap /dev/centos/data
+```
+B) Mounting partition
+```bash
+mkdir -p /.snapshot
+```
+```bash
+vim /etc/fstab
+```
+```bash
+/dev/centos/mongo-snap   /.snapshot auto  defaults 0 0
+```
+At this point the volume ".snapshot" will mirror MongoDB partition
+
+C) Making a GZIP file from entire "./snapshot" partition
+```bash
+umount -l /dev/centos/mongo-snap
+```
+```bash
+dd if=/dev/centos/mongo-snap | gzip > /home/bkp/snapshot20210714.gz
+```
+D) Restauring the backup “snapshot20210714.gz”
+
+Creating the partition to deploy the backup
+```bash
+lvcreate --size 650M --name mongorestore centos
+```
+Initiate restore
+```bash
+gzip -d -c /home/bkp/snapshot20210714.gz | dd of=/dev/centos/mongorestore
+```
+Mouting new parition on the same MongoDB volume
+```bash
+vim /etc/fstab
+```
+```bash
+/dev/centos/mongorestore   /data/mongodb xfs  defaults 0 0 
+
 
 # 10 - setting password on mongoDB cluster
 
