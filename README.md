@@ -153,8 +153,72 @@ print(cfg)  OR  printjson(cfg)
 rs.reconfig(cfg)
 ```
 
+# 8 - setting password on mongoDB cluster
 
-# 8 - Backup MongoDB
+create key pass on master
+
+```bash
+openssl rand -base64 768 > /var/lib/mongo/mongo-security/keyfile.txt
+```
+
+```bash
+chmod 400 keyfile.txt ; chown mongod:mongod /keyfile.txt
+```
+Copy file do slave servers
+```bash
+scp keyfile.txt root@camus0002:/var/lib/mongo/mongo-security
+```
+Create user on admin database
+```bash
+use admin
+```
+```bash
+
+db.createUser(
+   {
+       user: "admin", 
+       pwd: "123", 
+       roles:["root"]
+   })
+```
+OR
+```bash
+db.createUser(
+ {
+ user: "admin",
+ pwd: "senha",
+ roles: [ "userAdminAnyDatabase",
+          "dbAdminAnyDatabase",
+          "readWriteAnyDatabase"]
+ }
+)
+```
+You can add a role to a user that already exist on database
+
+"use DATABASE"
+```bash
+db.grantRolesToUser('user1', ['readWriteAnyDatabase']);
+OR
+db.grantRolesToUser('user1', [{ role: 'readWrite', db: 'account' }]);
+```
+
+put the line below on /etc/mongod.conf
+
+```bash
+security:
+   authorization: enabled
+   keyFile: /var/lib/mongo/mongo-security/keyfile.txt
+```
+restart de mongod
+```bash
+systemctl restart mongod
+```
+teste de authentication
+```bash
+mongo --port 27017 -u "USER" -p "SENHA" --authenticationDatabase "admin"
+```
+
+# 9 - Backup MongoDB
 
 A) Creating parition the mirror MongoDB volume
 ```bash
@@ -195,82 +259,44 @@ vim /etc/fstab
 ```
 ```bash
 /dev/centos/mongorestore   /data/mongodb xfs  defaults 0 0 
-
-
-# 10 - setting password on mongoDB cluster
-
-create key pass on master
-
-```bash
-openssl rand -base64 768 > /var/lib/mongo/mongo-security/keyfile.txt
 ```
+# 10 - monitoring mongo backup
 
+create a script like these
 ```bash
-chmod 400 keyfile.txt ; chown mongod:mongod /keyfile.txt
-```
-Copy file do slave servers
-```bash
-scp keyfile.txt root@camus0002:/var/lib/mongo/mongo-security
-```
+#!/bin/bash
+
+#Erase files older than 2 days
+
+#find /backup/*.gz -mtime +1 -exec rm -rf {} \;
 
 
-Create user on admin database
-```bash
-use admin
-```
+#Make Mongo Backup
 
+mongodump --db DBNAME --gzip --archive=/backup/DBNAME.gz
 
-```bash
+#Test integrity file
 
-db.createUser(
-   {
-       user: "tom", 
-       pwd: "jerry", 
-       roles:["root"]
-   })
+if gunzip -t /backup/DBNAME.gz
+then
+echo "0"
+
+else
+
+echo "1"
+fi
+
+#Rename file
+
+mv /backup/DBNAME.gz /backup/$(date +%F)DBNAME.gz
 
 ```
-OR
+Copy that line do crontab file
 ```bash
-db.createUser(
- {
- user: "admin",
- pwd: "senha",
- roles: [ "userAdminAnyDatabase",
-          "dbAdminAnyDatabase",
-          "readWriteAnyDatabase"]
- }
-)
+01 23 * * * bash /etc/batch/administracao/backupmongo.sh > /root/statusmongo.txt
 ```
-You can add a role to a user that already exist on database
-
-"use DATABASE"
+Copy that line to zabbix configuration file
 ```bash
-db.grantRolesToUser('user1', ['readWriteAnyDatabase']);
-OR
-db.grantRolesToUser('user1', [{ role: 'readWrite', db: 'account' }]);
+UserParameter=mongodb,cat /root/statusmongo.txt
 ```
-
-
-
-put the line below on /etc/mongod.conf
-
-
-```bash
-security:
-   authorization: enabled
-   keyFile: /var/lib/mongo/mongo-security/keyfile.txt
-```
-
-restart de mongod
-```bash
-systemctl restart mongod
-```
-teste de authentication
-```bash
-mongo --port 27017 -u "USER" -p "SENHA" --authenticationDatabase "admin"
-```
-
-
-
 
