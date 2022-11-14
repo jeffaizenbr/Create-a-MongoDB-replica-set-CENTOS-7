@@ -15,7 +15,7 @@ vim /etc/hosts
 Configure MongoDB Repository 4.0
 
 ```bash
-[mongodb-org-4.0]
+[mongodb-org-4.4]
 name=MongoDB Repository
 baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/4.4/x86_64/
 gpgcheck=1
