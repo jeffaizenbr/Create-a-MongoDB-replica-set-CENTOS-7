@@ -223,6 +223,9 @@ teste de authentication
 ```bash
 mongo --port 27017 -u "USER" -p "SENHA" --authenticationDatabase "admin"
 ```
+```bash
+mongosh --host localhost --port 27017 --username "rootUser" --password "rootUserPwd" --authenticationDatabase "admin"
+```
 
 # 9 - Backup MongoDB
 
