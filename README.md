@@ -150,7 +150,9 @@ cfg.members[3].votes = 1
 ```bash
 cfg.members[3].hidden = false
 ```
-
+```bash
+rs.reconfig(cfg, { force: true });
+```
 ```bash
 print(cfg)  OR  printjson(cfg)
 ```
